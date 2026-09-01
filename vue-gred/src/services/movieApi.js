@@ -1,28 +1,13 @@
 const API_KEY = process.env.VUE_APP_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
-async function fetchData(url, errorMessage) {
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(errorMessage);
-  }
-
-  return response.json();
-}
-
 export default {
   async discoverMovies({
     genre = "",
     year = "",
     sort = "popularity.desc",
   } = {}) {
-    let url =
-      `${BASE_URL}/discover/movie` +
-      `?api_key=${API_KEY}` +
-      `&language=en-US` +
-      `&sort_by=${sort}` +
-      `&page=1`;
+    let url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=${sort}&page=1`;
 
     if (genre) {
       url += `&with_genres=${genre}`;
@@ -32,7 +17,13 @@ export default {
       url += `&primary_release_year=${year}`;
     }
 
-    return fetchData(url, "Failed to fetch movies");
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch movies");
+    }
+
+    return await response.json();
   },
 
   async getMoviesByGenre(genreId) {
@@ -48,80 +39,100 @@ export default {
   },
 
   async getPopularMovies() {
-    const url =
-      `${BASE_URL}/movie/popular` +
-      `?api_key=${API_KEY}` +
-      `&language=en-US` +
-      `&page=1`;
+    const response = await fetch(
+      `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
+    );
 
-    return fetchData(url, "Failed to fetch popular movies");
+    if (!response.ok) {
+      throw new Error("Failed to fetch popular movies");
+    }
+
+    return await response.json();
   },
 
   async getTrendingMovies() {
-    const url =
-      `${BASE_URL}/trending/movie/week` +
-      `?api_key=${API_KEY}` +
-      `&language=en-US`;
+    const response = await fetch(
+      `${BASE_URL}/trending/movie/week?api_key=${API_KEY}`
+    );
 
-    return fetchData(url, "Failed to fetch trending movies");
+    if (!response.ok) {
+      throw new Error("Failed to fetch trending movies");
+    }
+
+    return await response.json();
   },
 
   async getTopRatedMovies() {
-    const url =
-      `${BASE_URL}/movie/top_rated` +
-      `?api_key=${API_KEY}` +
-      `&language=en-US` +
-      `&page=1`;
+    const response = await fetch(
+      `${BASE_URL}/movie/top_rated?api_key=${API_KEY}`
+    );
 
-    return fetchData(url, "Failed to fetch top rated movies");
+    if (!response.ok) {
+      throw new Error("Failed to fetch top rated movies");
+    }
+
+    return await response.json();
   },
 
   async searchMovies(query) {
-    const encodedQuery = encodeURIComponent(query);
+    const response = await fetch(
+      `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
+        query
+      )}&page=1`
+    );
 
-    const url =
-      `${BASE_URL}/search/movie` +
-      `?api_key=${API_KEY}` +
-      `&language=en-US` +
-      `&query=${encodedQuery}` +
-      `&page=1`;
+    if (!response.ok) {
+      throw new Error("Failed to search movies");
+    }
 
-    return fetchData(url, "Failed to search movies");
+    return await response.json();
   },
 
   async getGenres() {
-    const url =
-      `${BASE_URL}/genre/movie/list` +
-      `?api_key=${API_KEY}` +
-      `&language=en-US`;
+    const response = await fetch(
+      `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=en-US`
+    );
 
-    return fetchData(url, "Failed to fetch genres");
+    if (!response.ok) {
+      throw new Error("Failed to fetch genres");
+    }
+
+    return await response.json();
   },
 
   async getMovieDetails(movieId) {
-    const url =
-      `${BASE_URL}/movie/${movieId}` +
-      `?api_key=${API_KEY}` +
-      `&language=en-US`;
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`
+    );
 
-    return fetchData(url, "Failed to fetch movie details");
+    if (!response.ok) {
+      throw new Error("Failed to fetch movie details");
+    }
+
+    return await response.json();
   },
 
   async getMovieVideos(movieId) {
-    const url =
-      `${BASE_URL}/movie/${movieId}/videos` +
-      `?api_key=${API_KEY}` +
-      `&language=en-US`;
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}&language=en-US`
+    );
 
-    return fetchData(url, "Failed to fetch movie videos");
+    if (!response.ok) {
+      throw new Error("Failed to fetch movie videos");
+    }
+
+    return await response.json();
   },
 
   async getMovieCredits(movieId) {
-    const url =
-      `${BASE_URL}/movie/${movieId}/credits` +
-      `?api_key=${API_KEY}` +
-      `&language=en-US`;
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`
+    );
 
-    return fetchData(url, "Failed to fetch movie credits");
+    if (!response.ok) {
+      throw new Error("Failed to fetch movie credits");
+    }
+
+    return await response.json();
   },
 };
