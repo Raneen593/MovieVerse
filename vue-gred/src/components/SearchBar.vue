@@ -39,6 +39,7 @@ export default {
   border-radius: 22px;
   border: none;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+  color: white;
 }
 .search-input {
   width: 100%;
