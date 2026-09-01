@@ -11,6 +11,10 @@
         <!-- Filter -->
         <FilterBar @filter-changed="handleFilter" :genres="genres" />
       </div>
+      <div class="movies-count" v-if="!loading && !error">
+        <span class="movie-icon">🎬</span>
+        <span>{{ movies.length }} movies found</span>
+      </div>
       <div class="loading" v-if="loading">Loading Movies ...</div>
       <div class="error" v-else-if="error">{{ error }}</div>
       <div class="no-results" v-else-if="movies.length === 0">
@@ -18,7 +22,11 @@
         <p>Try searching for another movie.</p>
       </div>
       <div class="movies-grid" v-else>
-        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+        <MovieCard
+          v-for="movie in movies"
+          :key="movie.id"
+          :movies_api="movie"
+        />
       </div>
     </div>
   </div>
@@ -80,6 +88,7 @@ export default {
           data = discoverData;
         }
 
+        this.movies = data.results || []; // ✅ تأكد من وجود results
         this.movies = data.results;
       } catch (error) {
         this.error = error.message || "Failed to load movies";
@@ -105,7 +114,7 @@ export default {
 <style scoped>
 .movies-page {
   min-height: 100vh;
-  background: #0d0d14;
+  background: #080d14;
   color: white;
   padding: 80px 20px;
 }
@@ -115,7 +124,7 @@ export default {
   margin: 0 auto;
 }
 .ser-fil {
-  background-color: #1f202b;
+  background-color: #0d111c;
   border-radius: 12px;
 }
 .page-header {
@@ -139,42 +148,53 @@ export default {
 
   gap: 25px;
 }
+.movies-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #aaa;
+  font-size: 16px;
+  padding: 15px 0;
+  border-bottom: 1px solid #2a2a35;
+  margin-bottom: 25px;
+}
 
+.movie-icon {
+  font-size: 20px;
+}
+
+.movies-count span:last-child {
+  font-weight: 500;
+  color: #f5f5f5;
+}
+.loading,
+.error,
+.no-results {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .loading {
-  text-align: center;
-  padding: 80px;
   color: #aaa;
   font-size: 20px;
 }
 
 .error {
-  text-align: center;
-  padding: 50px;
+  font-size: 18px;
   color: #ff6b6b;
 }
-
 .no-results {
-  text-align: center;
-  padding: 80px 20px;
+  flex-direction: column;
+  color: #888;
 }
 .no-results h2 {
   font-size: 28px;
+  margin-bottom: 12px;
 }
-
 .no-results p {
-  color: #888;
-  margin-bottom: 20px;
+  font-size: 16px;
 }
-
-.no-results button {
-  padding: 12px 25px;
-  border: none;
-  border-radius: 25px;
-  background: #e50914;
-  color: white;
-  cursor: pointer;
-}
-
 .load-more-container {
   text-align: center;
   margin-top: 50px;

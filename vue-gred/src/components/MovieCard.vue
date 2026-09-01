@@ -1,183 +1,123 @@
+<script>
+export default {
+  props: ["movies_api"],
+};
+</script>
+
 <template>
-  <div class="movie-card" @click="openDetails">
-    <div class="poster-container">
-      <img
-        v-if="movie.poster_path"
-        :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
-        :alt="movie.title"
-        class="movie-poster"
-      />
+  <div class="card movie-card">
+    <img
+      :src="'https://image.tmdb.org/t/p/w500' + movies_api.poster_path"
+      class="card-img-top image"
+    />
+    <router-link :to="'/movie/' + movies_api.id" class="details-btn">
+      Details
+    </router-link>
+    <div class="card-body body">
+      <p class="title">{{ movies_api.title }}</p>
+      <div class="d-flex align-items-center gap-2 info">
+        <p class="rate">
+          <i class="fa-solid fa-star"></i>
+          {{ movies_api.vote_average }}
+        </p>
 
-      <div v-else class="no-poster">No Image</div>
+        <p class="dot">•</p>
 
-      <button class="favorite-btn" @click.stop="toggleFavorite">
-        {{ isFavorite ? "♥" : "♡" }}
-      </button>
-
-      <div class="movie-overlay">
-        <button class="details-btn">View Details</button>
-      </div>
-    </div>
-
-    <div class="movie-info">
-      <h3>{{ movie.title }}</h3>
-
-      <div class="movie-meta">
-        <span>⭐ {{ formattedRating }}</span>
-
-        <span v-if="movie.release_date">
-          {{ movie.release_date.substring(0, 4) }}
-        </span>
+        <p class="date">
+          {{ movies_api.release_date.slice(0, 4) }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    movie: {
-      type: Object,
-      required: true,
-    },
-  },
-
-  data() {
-    return {
-      isFavorite: false,
-    };
-  },
-
-  computed: {
-    formattedRating() {
-      if (!this.movie.vote_average) {
-        return "N/A";
-      }
-
-      return this.movie.vote_average.toFixed(1);
-    },
-  },
-
-  methods: {
-    openDetails() {
-      this.$router.push("/movie/" + this.movie.id);
-    },
-
-    toggleFavorite() {
-      this.isFavorite = !this.isFavorite;
-
-      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-
-      if (this.isFavorite) {
-        const exists = favorites.some((movie) => movie.id === this.movie.id);
-
-        if (!exists) {
-          favorites.push(this.movie);
-        }
-      } else {
-        favorites = favorites.filter((movie) => movie.id !== this.movie.id);
-      }
-
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-
-      this.$emit("favorite-changed", this.movie);
-    },
-  },
-};
-</script>
-
 <style scoped>
 .movie-card {
-  background: #17171f;
-  border-radius: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
   overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.3s ease;
+  background-color: #171e2b;
+  box-shadow: 10px 10px 20px #18181a;
+  transition: 0.4s ease;
 }
 
 .movie-card:hover {
-  transform: translateY(-8px);
+  transform: translate(8px, -10px);
 }
 
-.poster-container {
-  position: relative;
+.image {
+  width: 100%;
   aspect-ratio: 2 / 3;
-  overflow: hidden;
-}
-
-.movie-poster {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+  transition: 0.9s ease;
 }
 
-.no-poster {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #252532;
-  color: #aaa;
+.movie-card:hover .image {
+  transform: scale(1.06);
+  filter: brightness(0.6);
 }
 
-.favorite-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 38px;
-  height: 38px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.65);
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-  z-index: 3;
+.body {
+  padding: 10px;
 }
 
-.movie-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.movie-card:hover .movie-overlay {
-  opacity: 1;
-}
-
-.details-btn {
-  border: none;
-  padding: 10px 18px;
-  border-radius: 20px;
-  background: #e50914;
-  color: white;
-  cursor: pointer;
-}
-
-.movie-info {
-  padding: 12px;
-}
-
-.movie-info h3 {
-  color: white;
-  font-size: 16px;
+.title {
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 600;
   margin: 0 0 8px;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.movie-meta {
-  display: flex;
-  justify-content: space-between;
-  color: #aaa;
+.info p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #d0d0d0;
+}
+
+.info .rate {
+  color: var(--rating-color);
+  font-weight: 600;
+}
+
+.info .rate i {
+  margin-right: 4px;
+  font-size: 11px;
+}
+
+.details-btn {
+  position: absolute;
+  bottom: 85px;
+  left: 50%;
+  transform: translateX(-50%) translateY(15px);
+  width: 90%;
+  padding: 5px 0;
+
+  background-color: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+
   font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  opacity: 0;
+  transition: 0.4s ease;
+
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+
+.movie-card:hover .details-btn {
+  opacity: 1;
+  transform: translateX(-50%) translateY(5px);
 }
 </style>
