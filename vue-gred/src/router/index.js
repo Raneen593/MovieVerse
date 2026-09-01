@@ -2,10 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
-    path: "/",
-    redirect: "/movies",
-  },
-  {
     path: "/movies",
     name: "Movies",
     component: () => import("../views/MoviesPage.vue"),
