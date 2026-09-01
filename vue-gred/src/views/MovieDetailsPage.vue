@@ -1,81 +1,211 @@
 <template>
-  <main class="details-page">
-    <div v-if="loading" class="message">
-      <h2>Loading movie details...</h2>
+  <div class="movie-details-page">
+    <div v-if="loading" class="state-message">
+      <div class="loader"></div>
+      <p>Loading movie details...</p>
     </div>
 
-    <div v-else-if="error" class="message error">
-      <h2>{{ error }}</h2>
-      <button @click="goBack">Back to Movies</button>
+    <div v-else-if="error" class="state-message error-message">
+      <h2>Something went wrong</h2>
+      <p>{{ error }}</p>
+
+      <button class="back-button" @click="goBack">
+        Back to Movies
+      </button>
     </div>
 
-    <section v-else-if="movie" class="movie-hero" :style="backgroundStyle">
-      <div class="overlay"></div>
+    <div v-else-if="movie" class="movie-content">
+      <div
+        class="backdrop"
+        :style="{ backgroundImage: backdropImage }"
+      >
+        <div class="backdrop-overlay"></div>
+      </div>
 
-      <div class="movie-content">
-        <button class="back-button" @click="goBack">← Back to Movies</button>
+      <main class="details-container">
+        <button class="back-button" @click="goBack">
+          ← Back to Movies
+        </button>
 
-        <div class="details-container">
-          <img
-            v-if="movie.poster_path"
-            class="poster"
-            :src="posterUrl"
-            :alt="movie.title"
-          />
+        <section class="movie-hero">
+          <div class="poster-container">
+            <img
+              v-if="movie.poster_path"
+              :src="getImageUrl(movie.poster_path, 'w500')"
+              :alt="movie.title"
+              class="poster"
+            />
 
-          <div class="movie-info">
-            <p class="tagline">{{ movie.tagline }}</p>
+            <div v-else class="image-placeholder poster-placeholder">
+              No poster available
+            </div>
+          </div>
 
+          <div class="movie-summary">
             <h1>{{ movie.title }}</h1>
 
-            <div class="meta">
-              <span>⭐ {{ rating }}</span>
-              <span>{{ releaseYear }}</span>
-              <span>{{ runtime }}</span>
+            <p v-if="movie.tagline" class="tagline">
+              “{{ movie.tagline }}”
+            </p>
+
+            <div class="quick-info">
+              <span class="rating">
+                ★ {{ formatRating(movie.vote_average) }}
+              </span>
+
+              <span v-if="releaseYear">
+                {{ releaseYear }}
+              </span>
+
+              <span v-if="movie.runtime">
+                {{ formatRuntime(movie.runtime) }}
+              </span>
             </div>
 
-            <div class="genres">
-              <span v-for="genre in movie.genres" :key="genre.id" class="genre">
+            <div
+              v-if="movie.genres && movie.genres.length"
+              class="genres"
+            >
+              <span
+                v-for="genre in movie.genres"
+                :key="genre.id"
+                class="genre"
+              >
                 {{ genre.name }}
               </span>
             </div>
 
-            <h3>Overview</h3>
-            <p class="overview">
-              {{ movie.overview || "No overview is available." }}
-            </p>
+            <div class="overview">
+              <h2>Overview</h2>
+
+              <p>
+                {{
+                  movie.overview ||
+                  "No overview is available for this movie."
+                }}
+              </p>
+            </div>
 
             <button
-              v-if="trailer"
+              v-if="trailerKey"
               class="trailer-button"
               @click="showTrailer = true"
             >
               ▶ Watch Trailer
             </button>
+          </div>
+        </section>
 
-            <p v-else class="no-trailer">Trailer is not available.</p>
+        <section class="content-section">
+          <h2 class="section-title">Movie Info</h2>
+
+          <div class="info-grid">
+            <article class="info-card">
+              <span class="info-label">Status</span>
+              <strong>{{ movie.status || "Not available" }}</strong>
+            </article>
+
+            <article class="info-card">
+              <span class="info-label">Original Language</span>
+              <strong>{{ originalLanguage }}</strong>
+            </article>
+
+            <article class="info-card">
+              <span class="info-label">Release Date</span>
+              <strong>{{ formatDate(movie.release_date) }}</strong>
+            </article>
+
+            <article class="info-card">
+              <span class="info-label">Runtime</span>
+
+              <strong>
+                {{
+                  movie.runtime
+                    ? formatRuntime(movie.runtime)
+                    : "Not available"
+                }}
+              </strong>
+            </article>
+
+            <article class="info-card">
+              <span class="info-label">Budget</span>
+              <strong>{{ formatMoney(movie.budget) }}</strong>
+            </article>
+
+            <article class="info-card">
+              <span class="info-label">Revenue</span>
+              <strong>{{ formatMoney(movie.revenue) }}</strong>
+            </article>
+
+            <article class="info-card companies-card">
+              <span class="info-label">Production Companies</span>
+              <strong>{{ productionCompanies }}</strong>
+            </article>
+          </div>
+        </section>
+
+        <section v-if="cast.length" class="content-section">
+          <h2 class="section-title">Top Cast</h2>
+
+          <div class="cast-grid">
+            <article
+              v-for="person in cast"
+              :key="person.cast_id || person.credit_id"
+              class="cast-card"
+            >
+              <img
+                v-if="person.profile_path"
+                :src="getImageUrl(person.profile_path, 'w300')"
+                :alt="person.name"
+                class="cast-image"
+              />
+
+              <div v-else class="cast-placeholder">
+                <span>👤</span>
+              </div>
+
+              <div class="cast-details">
+                <h3>{{ person.name }}</h3>
+
+                <p>
+                  {{ person.character || "Character not available" }}
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div
+        v-if="showTrailer"
+        class="trailer-modal"
+        @click.self="closeTrailer"
+      >
+        <div class="trailer-content">
+          <button
+            class="close-button"
+            aria-label="Close trailer"
+            @click="closeTrailer"
+          >
+            ×
+          </button>
+
+          <div class="video-container">
+            <iframe
+              :src="trailerUrl"
+              :title="`${movie.title} trailer`"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
           </div>
         </div>
       </div>
-    </section>
-
-    <div v-if="showTrailer" class="modal" @click.self="showTrailer = false">
-      <div class="modal-content">
-        <button class="close-button" @click="showTrailer = false">×</button>
-
-        <iframe
-          :src="trailerUrl"
-          title="Movie trailer"
-          allow="autoplay; encrypted-media; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      </div>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>
-import movieApi from "../services/movieApi";
+import movieApi from "@/services/movieApi";
 
 export default {
   name: "MovieDetailsPage",
@@ -83,7 +213,8 @@ export default {
   data() {
     return {
       movie: null,
-      trailer: null,
+      cast: [],
+      trailerKey: "",
       loading: true,
       error: "",
       showTrailer: false,
@@ -91,88 +222,180 @@ export default {
   },
 
   computed: {
-    posterUrl() {
-      return `https://image.tmdb.org/t/p/w500${this.movie.poster_path}`;
-    },
-
-    backgroundStyle() {
-      if (!this.movie.backdrop_path) {
-        return {
-          backgroundColor: "#0b0b12",
-        };
-      }
-
-      return {
-        backgroundImage: `url(https://image.tmdb.org/t/p/original${this.movie.backdrop_path})`,
-      };
-    },
-
-    rating() {
-      return this.movie.vote_average
-        ? this.movie.vote_average.toFixed(1)
-        : "N/A";
-    },
-
     releaseYear() {
-      return this.movie.release_date
-        ? this.movie.release_date.slice(0, 4)
-        : "Unknown";
-    },
-
-    runtime() {
-      if (!this.movie.runtime) {
-        return "Runtime unknown";
+      if (!this.movie || !this.movie.release_date) {
+        return "";
       }
 
-      const hours = Math.floor(this.movie.runtime / 60);
-      const minutes = this.movie.runtime % 60;
+      return this.movie.release_date.slice(0, 4);
+    },
 
-      return `${hours}h ${minutes}m`;
+    backdropImage() {
+      if (!this.movie || !this.movie.backdrop_path) {
+        return "none";
+      }
+
+      return `url(${this.getImageUrl(
+        this.movie.backdrop_path,
+        "original"
+      )})`;
     },
 
     trailerUrl() {
-      return this.trailer
-        ? `https://www.youtube.com/embed/${this.trailer.key}?autoplay=1`
-        : "";
+      if (!this.trailerKey) {
+        return "";
+      }
+
+      return `https://www.youtube.com/embed/${this.trailerKey}?autoplay=1`;
+    },
+
+    originalLanguage() {
+      if (!this.movie || !this.movie.original_language) {
+        return "Not available";
+      }
+
+      return this.movie.original_language.toUpperCase();
+    },
+
+    productionCompanies() {
+      if (
+        !this.movie ||
+        !this.movie.production_companies ||
+        !this.movie.production_companies.length
+      ) {
+        return "Not available";
+      }
+
+      return this.movie.production_companies
+        .map((company) => company.name)
+        .join(", ");
     },
   },
 
-  async created() {
-    await this.loadMovie();
+  watch: {
+    "$route.params.id"() {
+      this.loadMovie();
+    },
+  },
+
+  mounted() {
+    this.loadMovie();
   },
 
   methods: {
     async loadMovie() {
+      const movieId = this.$route.params.id;
+
+      this.loading = true;
+      this.error = "";
+      this.movie = null;
+      this.cast = [];
+      this.trailerKey = "";
+      this.showTrailer = false;
+
       try {
-        this.loading = true;
-        this.error = "";
-
-        const movieId = this.$route.params.id;
-
-        const [movieData, videoData] = await Promise.all([
+        const [movieData, videosData, creditsData] = await Promise.all([
           movieApi.getMovieDetails(movieId),
           movieApi.getMovieVideos(movieId),
+          movieApi.getMovieCredits(movieId),
         ]);
 
         this.movie = movieData;
 
-        this.trailer =
-          videoData.results.find(
-            (video) =>
-              video.site === "YouTube" &&
-              video.type === "Trailer" &&
-              video.official
-          ) ||
-          videoData.results.find(
-            (video) => video.site === "YouTube" && video.type === "Trailer"
-          ) ||
-          null;
+        const videos = videosData.results || [];
+
+        const officialTrailer = videos.find(
+          (video) =>
+            video.site === "YouTube" &&
+            video.type === "Trailer" &&
+            video.official
+        );
+
+        const anyTrailer = videos.find(
+          (video) =>
+            video.site === "YouTube" &&
+            video.type === "Trailer"
+        );
+
+        const anyYoutubeVideo = videos.find(
+          (video) => video.site === "YouTube"
+        );
+
+        const selectedVideo =
+          officialTrailer || anyTrailer || anyYoutubeVideo;
+
+        this.trailerKey = selectedVideo ? selectedVideo.key : "";
+
+        const castMembers = creditsData.cast || [];
+
+        this.cast = castMembers.slice(0, 10);
       } catch (error) {
-        console.error(error);
-        this.error = "Unable to load movie details.";
+        console.error("Movie details error:", error);
+
+        this.error =
+          "Unable to load the movie details. Please try again.";
       } finally {
         this.loading = false;
       }
+    },
+
+    getImageUrl(path, size = "w500") {
+      return `https://image.tmdb.org/t/p/${size}${path}`;
+    },
+
+    formatRating(rating) {
+      if (!rating) {
+        return "N/A";
+      }
+
+      return rating.toFixed(1);
+    },
+
+    formatRuntime(minutes) {
+      if (!minutes) {
+        return "Not available";
+      }
+
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+
+      if (!hours) {
+        return `${remainingMinutes}m`;
+      }
+
+      if (!remainingMinutes) {
+        return `${hours}h`;
+      }
+
+      return `${hours}h ${remainingMinutes}m`;
+    },
+
+    formatMoney(value) {
+      if (!value) {
+        return "Not available";
+      }
+
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }).format(value);
+    },
+
+    formatDate(date) {
+      if (!date) {
+        return "Not available";
+      }
+
+      return new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(new Date(`${date}T00:00:00`));
+    },
+
+    closeTrailer() {
+      this.showTrailer = false;
     },
 
     goBack() {
@@ -183,209 +406,459 @@ export default {
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
-
-.details-page {
-  min-height: 100vh;
-  background-color: #0b0b12;
-  color: white;
-}
-
-.movie-hero {
+.movie-details-page {
   position: relative;
   min-height: 100vh;
-  background-position: center;
-  background-size: cover;
+  background-color: #10141f;
+  color: #ffffff;
 }
 
-.overlay {
+.backdrop {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(5, 5, 12, 0.98) 15%,
-    rgba(5, 5, 12, 0.82) 55%,
-    rgba(5, 5, 12, 0.55) 100%
-  );
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 650px;
+  background-size: cover;
+  background-position: center top;
 }
 
-.movie-content {
-  position: relative;
-  z-index: 1;
-  width: min(1200px, 92%);
-  margin: auto;
-  padding: 40px 0 80px;
-}
-
-.back-button {
-  margin-bottom: 45px;
-  padding: 11px 18px;
-  border: 1px solid #ffffff4d;
-  border-radius: 25px;
-  background: #11121ccc;
-  color: white;
-  cursor: pointer;
+.backdrop-overlay {
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(16, 20, 31, 0.35),
+      rgba(16, 20, 31, 0.92) 78%,
+      #10141f 100%
+    ),
+    linear-gradient(
+      to right,
+      rgba(16, 20, 31, 0.92),
+      rgba(16, 20, 31, 0.3)
+    );
 }
 
 .details-container {
-  display: flex;
+  position: relative;
+  z-index: 1;
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 40px 0 70px;
+}
+
+.back-button {
+  padding: 11px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(16, 20, 31, 0.75);
+  color: #ffffff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.back-button:hover {
+  background: #ffffff;
+  color: #10141f;
+}
+
+.movie-hero {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 45px;
   align-items: center;
-  gap: 55px;
+  min-height: 520px;
+  padding-top: 35px;
+}
+
+.poster-container {
+  width: 100%;
 }
 
 .poster {
-  width: 320px;
-  border-radius: 18px;
-  box-shadow: 0 25px 60px #000000b3;
+  display: block;
+  width: 100%;
+  border-radius: 14px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
 }
 
-.movie-info {
-  max-width: 690px;
+.image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #202938;
+  color: #a7b0c0;
+  text-align: center;
+}
+
+.poster-placeholder {
+  min-height: 450px;
+  border-radius: 14px;
+}
+
+.movie-summary h1 {
+  margin: 0;
+  font-size: clamp(38px, 6vw, 70px);
+  line-height: 1.05;
 }
 
 .tagline {
-  margin: 0 0 8px;
-  color: #bbb;
+  margin: 15px 0;
+  color: #bdc5d4;
+  font-size: 18px;
   font-style: italic;
 }
 
-h1 {
-  margin: 0 0 20px;
-  font-size: clamp(40px, 6vw, 72px);
-  line-height: 1;
-}
-
-.meta {
+.quick-info {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 22px;
-  color: #ddd;
+  align-items: center;
+  gap: 18px;
+  margin: 22px 0;
+  color: #d7dbe3;
+}
+
+.rating {
+  color: #ffd166;
+  font-weight: 700;
 }
 
 .genres {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .genre {
-  padding: 8px 14px;
-  border: 1px solid #ffffff4d;
-  border-radius: 20px;
-  background: #ffffff1a;
-}
-
-h3 {
-  margin-bottom: 10px;
-  font-size: 22px;
+  padding: 7px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 14px;
 }
 
 .overview {
-  color: #ddd;
-  font-size: 18px;
+  max-width: 760px;
+}
+
+.overview h2 {
+  margin-bottom: 13px;
+  font-size: 26px;
+}
+
+.overview p {
+  color: #d0d5df;
+  font-size: 16px;
   line-height: 1.8;
 }
 
 .trailer-button {
-  margin-top: 25px;
-  padding: 14px 25px;
+  margin-top: 18px;
+  padding: 13px 23px;
   border: 0;
-  border-radius: 30px;
+  border-radius: 9px;
   background: #e50914;
-  color: white;
+  color: #ffffff;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.25s;
+  transition: 0.2s ease;
 }
 
 .trailer-button:hover {
-  background: #ff2632;
+  background: #ff1f2a;
   transform: translateY(-2px);
 }
 
-.no-trailer {
-  margin-top: 25px;
-  color: #aaa;
+.content-section {
+  margin-top: 48px;
 }
 
-.message {
+.section-title {
+  margin: 0 0 20px;
+  font-size: 26px;
+}
+
+/* Movie Info */
+
+.info-grid {
   display: grid;
-  min-height: 100vh;
-  place-content: center;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.info-card {
+  min-height: 70px;
+  padding: 15px 17px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  background: #171e2b;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-label {
+  color: #929cad;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.info-card strong {
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.companies-card {
+  grid-column: span 3;
+}
+
+/* Circular Cast */
+
+.cast-grid {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  padding: 8px 2px 18px;
+  scroll-behavior: smooth;
+}
+
+.cast-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.cast-grid::-webkit-scrollbar-track {
+  background: #171e2b;
+  border-radius: 10px;
+}
+
+.cast-grid::-webkit-scrollbar-thumb {
+  background: #465166;
+  border-radius: 10px;
+}
+
+.cast-grid::-webkit-scrollbar-thumb:hover {
+  background: #5d6980;
+}
+
+.cast-card {
+  flex: 0 0 130px;
+  border: none;
+  background: transparent;
   text-align: center;
 }
 
-.error {
-  color: #ff6670;
+.cast-image,
+.cast-placeholder {
+  width: 115px;
+  height: 115px;
+  margin: 0 auto;
+  border: 3px solid #2d3748;
+  border-radius: 50%;
 }
 
-.error button {
-  padding: 12px 20px;
-  border: 0;
-  border-radius: 25px;
-  cursor: pointer;
+.cast-image {
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+  transition: 0.25s ease;
 }
 
-.modal {
+.cast-card:hover .cast-image {
+  transform: scale(1.06);
+  border-color: #e50914;
+}
+
+.cast-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #202938;
+}
+
+.cast-card:hover .cast-placeholder {
+  border-color: #e50914;
+}
+
+.cast-placeholder span {
+  font-size: 35px;
+}
+
+.cast-details {
+  padding: 11px 3px 0;
+}
+
+.cast-details h3 {
+  margin: 0 0 5px;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.cast-details p {
+  margin: 0;
+  color: #9fa8b8;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Loading and Error */
+
+.state-message {
+  min-height: 100vh;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.error-message p {
+  color: #bdc5d4;
+}
+
+.error-message .back-button {
+  margin-top: 15px;
+}
+
+.loader {
+  width: 45px;
+  height: 45px;
+  border: 4px solid rgba(255, 255, 255, 0.15);
+  border-top-color: #e50914;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Trailer */
+
+.trailer-modal {
   position: fixed;
   z-index: 1000;
   inset: 0;
-  display: grid;
-  place-items: center;
   padding: 20px;
-  background: #000000e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.88);
 }
 
-.modal-content {
+.trailer-content {
   position: relative;
-  width: min(950px, 95vw);
-}
-
-.modal-content iframe {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border: 0;
-  border-radius: 12px;
+  width: min(950px, 100%);
 }
 
 .close-button {
   position: absolute;
+  z-index: 2;
   top: -45px;
   right: 0;
   border: 0;
   background: transparent;
-  color: white;
+  color: #ffffff;
   font-size: 38px;
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
-  .movie-content {
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000000;
+}
+
+.video-container iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 950px) {
+  .movie-hero {
+    grid-template-columns: 230px 1fr;
+    gap: 28px;
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .companies-card {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 650px) {
+  .details-container {
+    width: min(100% - 28px, 1200px);
     padding-top: 25px;
   }
 
-  .details-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 30px;
+  .backdrop {
+    height: 500px;
   }
 
-  .poster {
-    width: min(280px, 100%);
+  .movie-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: auto;
+    padding-top: 30px;
+  }
+
+  .poster-container {
+    width: min(230px, 70%);
     align-self: center;
   }
 
-  .overlay {
-    background: rgba(5, 5, 12, 0.88);
+  .movie-summary h1 {
+    font-size: 38px;
   }
 
-  h1 {
-    font-size: 42px;
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .companies-card {
+    grid-column: span 1;
+  }
+
+  .cast-grid {
+    gap: 16px;
+  }
+
+  .cast-card {
+    flex-basis: 110px;
+  }
+
+  .cast-image,
+  .cast-placeholder {
+    width: 95px;
+    height: 95px;
+  }
+
+  .cast-details h3 {
+    font-size: 13px;
+  }
+
+  .cast-details p {
+    font-size: 11px;
   }
 }
 </style>
