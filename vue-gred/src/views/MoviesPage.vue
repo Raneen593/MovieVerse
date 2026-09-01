@@ -105,7 +105,7 @@ export default {
 <style scoped>
 .movies-page {
   min-height: 100vh;
-  background: #0d0d14;
+  background: #10141f;
   color: white;
   padding: 80px 20px;
 }
