@@ -11,6 +11,10 @@
         <!-- Filter -->
         <FilterBar @filter-changed="handleFilter" :genres="genres" />
       </div>
+      <div class="movies-count" v-if="!loading && !error">
+        <span class="movie-icon">🎬</span>
+        <span>{{ movies.length }} movies found</span>
+      </div>
       <div class="loading" v-if="loading">Loading Movies ...</div>
       <div class="error" v-else-if="error">{{ error }}</div>
       <div class="no-results" v-else-if="movies.length === 0">
@@ -18,7 +22,11 @@
         <p>Try searching for another movie.</p>
       </div>
       <div class="movies-grid" v-else>
-        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+        <MovieCard
+          v-for="movie in movies"
+          :key="movie.id"
+          :movies_api="movie"
+        />
       </div>
     </div>
   </div>
@@ -79,7 +87,11 @@ export default {
           });
           data = discoverData;
         }
+        console.log("🔍 Data from API:", data);
+        console.log("🔍 Results array:", data?.results);
+        console.log("🔍 Number of movies:", data?.results?.length);
 
+        this.movies = data.results || []; // ✅ تأكد من وجود results
         this.movies = data.results;
       } catch (error) {
         this.error = error.message || "Failed to load movies";
@@ -139,7 +151,25 @@ export default {
 
   gap: 25px;
 }
+.movies-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #aaa;
+  font-size: 16px;
+  padding: 15px 0;
+  border-bottom: 1px solid #2a2a35;
+  margin-bottom: 25px;
+}
 
+.movie-icon {
+  font-size: 20px;
+}
+
+.movies-count span:last-child {
+  font-weight: 500;
+  color: #f5f5f5;
+}
 .loading {
   text-align: center;
   padding: 80px;
