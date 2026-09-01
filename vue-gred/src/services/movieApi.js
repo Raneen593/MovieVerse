@@ -1,4 +1,4 @@
-const API_KEY = process.env.VUE_APP_TMDB_API_KEY;
+const API_KEY = "8db236c02453dd6697b41c2f095b65ae";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export default {
