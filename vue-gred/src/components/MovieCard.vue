@@ -10,6 +10,7 @@ export default {
       :src="'https://image.tmdb.org/t/p/w500' + movies_api.poster_path"
       class="card-img-top image"
     />
+
     <router-link :to="'/movie/' + movies_api.id" class="details-btn">
       Details
     </router-link>
