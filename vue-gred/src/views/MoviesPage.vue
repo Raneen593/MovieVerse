@@ -87,6 +87,9 @@ export default {
           });
           data = discoverData;
         }
+        console.log("🔍 Data from API:", data);
+        console.log("🔍 Results array:", data?.results);
+        console.log("🔍 Number of movies:", data?.results?.length);
 
         this.movies = data.results || []; // ✅ تأكد من وجود results
         this.movies = data.results;

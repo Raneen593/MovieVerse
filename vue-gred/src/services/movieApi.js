@@ -99,4 +99,40 @@ export default {
 
     return await response.json();
   },
+
+  async getMovieDetails(movieId) {
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch movie details");
+    }
+
+    return await response.json();
+  },
+
+  async getMovieVideos(movieId) {
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}&language=en-US`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch movie videos");
+    }
+
+    return await response.json();
+  },
+
+  async getMovieCredits(movieId) {
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch movie credits");
+    }
+
+    return await response.json();
+  },
 };

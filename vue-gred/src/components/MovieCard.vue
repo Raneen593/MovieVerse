@@ -37,8 +37,8 @@ export default {
   border: none;
   border-radius: 10px;
   overflow: hidden;
-  background-color: #171e2b;
-  box-shadow: 10px 10px 20px #18181a;
+  background-color: rgb(39, 37, 37);
+  box-shadow: 10px 15px 30px rgba(0, 0, 0, 0.5);
   transition: 0.4s ease;
 }
 
@@ -51,6 +51,7 @@ export default {
   aspect-ratio: 2 / 3;
   object-fit: contain;
   display: block;
+  background-color: #151515;
   transition: 0.9s ease;
 }
 
@@ -64,7 +65,7 @@ export default {
 }
 
 .title {
-  color: var(--white);
+  color: #f5f5f5;
   font-size: 14px;
   font-weight: 600;
   margin: 0 0 8px;
@@ -82,7 +83,7 @@ export default {
 }
 
 .info .rate {
-  color: var(--rating-color);
+  color: rgb(241, 207, 57);
   font-weight: 600;
 }
 
@@ -99,8 +100,8 @@ export default {
   width: 90%;
   padding: 5px 0;
 
-  background-color: var(--secondary-color);
-  color: var(--white);
+  background-color: #e63956;
+  color: white;
   border: none;
   border-radius: 50px;
 
