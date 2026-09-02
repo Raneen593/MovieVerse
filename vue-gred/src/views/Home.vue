@@ -4,11 +4,11 @@ import Moviesection from '../components/Moviesection.vue';
 import movieapi from '../services/movieApi';
 
 
+
 export default {
     components: {
         Herosection,
         Moviesection
-
     },
 
     data() {
@@ -18,19 +18,21 @@ export default {
             top_rated: [],
 
             loading: true,
+            error: null,
             selectedMovie: null
         }
-
     },
+
     async mounted() {
-
-        this.trending = (await movieapi.getTrendingMovies()).results;
-
-        this.popular = (await movieapi.getPopularMovies()).results;
-
-        this.top_rated = (await movieapi.getTopRatedMovies()).results;
-        this.loading = false
-
+        try {
+            this.trending = (await movieapi.getTrendingMovies()).results;
+            this.popular = (await movieapi.getPopularMovies()).results;
+            this.top_rated = (await movieapi.getTopRatedMovies()).results;
+        } catch (error) {
+            this.error = error.message;
+        } finally {
+            this.loading = false;
+        }
     },
     methods: {
         handleTrailer(movie) {
@@ -47,12 +49,17 @@ export default {
 
 <template>
     <div class="home">
-        <div v-if="loading" class="loading">
-            <i class="fa-solid fa-spinner"></i>
+        <div class="loading" v-if="loading">Loading Movies ...</div>
+        <div class="error" v-else-if="error">{{ error }}</div>
+        <div class="no-results" v-else-if="
+            trending.length === 0 &&
+            popular.length === 0 &&
+            top_rated.length === 0">
+            <h2>No Movies Found</h2>
+            <p>Try searching for another movie.</p>
         </div>
 
         <div v-else>
-
             <Herosection :movies_api="trending" @watch-trailer="handleTrailer" @add-favorite="handleFavorite" />
 
             <Moviesection title="Trending Now" subtitle="What everyone is watching this week" :movies_api="trending" />
@@ -61,19 +68,40 @@ export default {
 
             <Moviesection title="Top Rated Movies" subtitle="The highest scored films on CineVerse"
                 :movies_api="top_rated" />
-
         </div>
+
     </div>
 </template>
 
 <style scoped>
-.loading {
+.loading,
+.error,
+.no-results{
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--white);
-    font-size: 30px;
+}
+.loading{
+    color: #aaa;
+    font-size: 20px;  
+}
+
+.error {
+    font-size:18px;
+    color: #ff6b6b;
+}
+.no-results{
+  flex-direction: column;
+  color: #888;
+  
+}
+.no-results h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.no-results p {
+    font-size:16px;
 }
 
 .home {
