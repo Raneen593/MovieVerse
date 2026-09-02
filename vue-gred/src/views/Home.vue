@@ -36,13 +36,20 @@ export default {
     },
     methods: {
         handleTrailer(movie) {
-            this.trailerMovie = movie
+            this.$router.push(`/movie/${movie.id}`);
         },
-
         handleFavorite(movie) {
-            this.favoriteMovie = movie
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            const exists = favorites.some(item => item.id === movie.id);
+            if (!exists) {
+                favorites.push(movie);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                alert('Added to favorites!');
+            } else {
+                alert('⚠️ Already in favorites!');
+            }
         }
-    }
+    },
 }
 
 </script>
@@ -76,32 +83,36 @@ export default {
 <style scoped>
 .loading,
 .error,
-.no-results{
+.no-results {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.loading{
+
+.loading {
     color: #aaa;
-    font-size: 20px;  
+    font-size: 20px;
 }
 
 .error {
-    font-size:18px;
+    font-size: 18px;
     color: #ff6b6b;
 }
-.no-results{
-  flex-direction: column;
-  color: #888;
-  
+
+.no-results {
+    flex-direction: column;
+    color: #888;
+
 }
+
 .no-results h2 {
-  font-size: 28px;
-  margin-bottom: 12px;
+    font-size: 28px;
+    margin-bottom: 12px;
 }
+
 .no-results p {
-    font-size:16px;
+    font-size: 16px;
 }
 
 .home {
