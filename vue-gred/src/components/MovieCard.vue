@@ -10,14 +10,12 @@ export default {
       :src="'https://image.tmdb.org/t/p/w500' + movies_api.poster_path"
       class="card-img-top image"
     />
-
     <router-link :to="'/movie/' + movies_api.id" class="details-btn">
       Details
     </router-link>
-
     <div class="card-body body">
       <p class="title">{{ movies_api.title }}</p>
-      <div class="d-flex align-items-center; gap-2 info">
+      <div class="d-flex align-items-center gap-2 info">
         <p class="rate">
           <i class="fa-solid fa-star"></i>
           {{ movies_api.vote_average }}

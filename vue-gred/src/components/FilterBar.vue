@@ -79,12 +79,12 @@ export default {
 }
 
 .filter-bar select {
-  background-color: #171e2b;
+  background-color: #0d111c;
   padding: 11px;
   border-radius: 20px;
   color: white;
   cursor: pointer;
-  width: 331px;
+  width: 400px;
   margin-bottom: 18px;
   transition: all 0.3s ease;
   border: 1px solid #353535;
