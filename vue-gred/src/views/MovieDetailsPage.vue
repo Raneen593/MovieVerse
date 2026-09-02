@@ -18,7 +18,6 @@
       </div>
 
       <main class="details-container">
-        <button class="back-button" @click="goBack">← Back to Movies</button>
 
         <section class="movie-hero">
           <div class="poster-container">
@@ -368,9 +367,7 @@ export default {
       this.showTrailer = false;
     },
 
-    goBack() {
-      this.$router.push("/movies");
-    },
+    
   },
 };
 </script>
