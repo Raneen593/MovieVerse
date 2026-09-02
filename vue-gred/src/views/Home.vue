@@ -1,6 +1,6 @@
 <script>
-import Herosection from '../components/HeroSection.vue';
-import Moviesection from '../components/MovieSection.vue';
+import Herosection from '../components/Herosection.vue';
+import Moviesection from '../components/Moviesection.vue';
 import movieapi from '../services/movieApi';
 
 
