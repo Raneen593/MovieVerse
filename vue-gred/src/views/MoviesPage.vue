@@ -117,7 +117,7 @@ export default {
 <style scoped>
 .movies-page {
   min-height: 100vh;
-  background: #10141f;
+  background: var(--background-color);
   color: white;
   padding: 80px 20px;
 }
@@ -127,7 +127,7 @@ export default {
   margin: 0 auto;
 }
 .ser-fil {
-  background-color: #171e2b;
+  background-color: var(--primary-color);
   border-radius: 12px;
 }
 .page-header {
@@ -198,7 +198,6 @@ export default {
 .no-results p {
   font-size: 16px;
 }
-
 .load-more-container {
   text-align: center;
   margin-top: 50px;

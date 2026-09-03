@@ -75,16 +75,16 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 35px;
-  margin-top: -22px;
+  margin-top: 0px;
 }
 
 .filter-bar select {
-  background-color: #171e2b;
+  background-color: var(--primary-color);
   padding: 11px;
   border-radius: 20px;
   color: white;
   cursor: pointer;
-  width: 331px;
+  width: 400px;
   margin-bottom: 18px;
   transition: all 0.3s ease;
   border: 1px solid #353535;

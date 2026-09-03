@@ -35,7 +35,7 @@ export default {
 .searchtap {
   padding: 12px;
   width: 100%;
-  background: #171e2b;
+  background: var(--primary-color);
   border-radius: 22px;
   border: none;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
@@ -46,7 +46,7 @@ export default {
   padding: 15px 45px 15px 20px;
   border: 1px solid #333;
   border-radius: 30px;
-  background: #171e2b;
+  background: var(--primary-color);
   color: white;
   font-size: 16px;
   outline: none;
