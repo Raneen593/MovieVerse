@@ -35,7 +35,9 @@
             <router-link to="/movies" class="nav-link">Movies </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/favorite" class="nav-link">Favorites</router-link>
+            <router-link to="/favorites" class="nav-link"
+              >Favorites</router-link
+            >
           </li>
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">Profile</router-link>
