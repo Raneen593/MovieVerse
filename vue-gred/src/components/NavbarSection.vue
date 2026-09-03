@@ -35,7 +35,7 @@
             <router-link to="/movies" class="nav-link">Movies </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/favorite" class="nav-link">Favorites</router-link>
+            <router-link to="/favorites" class="nav-link">Favorites</router-link>
           </li>
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">Profile</router-link>
@@ -49,7 +49,7 @@
             <i class="fa-solid fa-magnifying-glass"></i>
           </a>
           <router-link
-            to="/favorite"
+            to="/favorites"
             class="nav-link d-flex align-items-center justify-content-center icons"
           >
             <i class="fa-solid fa-heart"></i>

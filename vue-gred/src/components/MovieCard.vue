@@ -124,13 +124,19 @@ export default {
 </style> -->
 
 <script>
+ import FavoriteHeart from './FavoriteHeart.vue';
 export default {
   props: ["movies_api"],
+    
+   components: {
+    FavoriteHeart,
+  },
 };
 </script>
 
 <template>
   <div class="card movie-card">
+     <FavoriteHeart :movie="movies_api" /> 
     <img
       :src="'https://image.tmdb.org/t/p/w500' + movies_api.poster_path"
       class="card-img-top image"
@@ -165,6 +171,7 @@ export default {
   background-color: var(--primary-color);
   box-shadow: 10px 10px 20px rgb(24, 24, 26);
   transition: 0.4s ease;
+  position: relative; 
 }
 
 .movie-card:hover {
