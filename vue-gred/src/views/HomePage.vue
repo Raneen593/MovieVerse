@@ -36,13 +36,18 @@ export default {
     handleTrailer(movie) {
       this.$router.push(`/movie/${movie.id}`);
     },
+
     handleFavorite(movie) {
+      // 1. جيبي المفضلة القديمة من localStorage
       let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+      // 2. تأكدي إن الفيلم مش مكرر
       const exists = favorites.some((item) => item.id === movie.id);
+
       if (!exists) {
         favorites.push(movie);
         localStorage.setItem("favorites", JSON.stringify(favorites));
-        alert("Added to favorites!");
+        alert("✅ Added to favorites!");
       } else {
         alert("⚠️ Already in favorites!");
       }
@@ -102,7 +107,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 .loading {
   color: #aaa;
   font-size: 20px;
@@ -112,17 +116,14 @@ export default {
   font-size: 18px;
   color: #ff6b6b;
 }
-
 .no-results {
   flex-direction: column;
   color: #888;
 }
-
 .no-results h2 {
   font-size: 28px;
   margin-bottom: 12px;
 }
-
 .no-results p {
   font-size: 16px;
 }

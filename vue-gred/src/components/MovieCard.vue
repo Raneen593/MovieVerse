@@ -1,17 +1,11 @@
 <script>
- import FavoriteHeart from './FavoriteHeart.vue';
 export default {
   props: ["movies_api"],
-    
-   components: {
-    FavoriteHeart,
-  },
 };
 </script>
 
 <template>
   <div class="card movie-card">
-     <FavoriteHeart :movie="movies_api" /> 
     <img
       :src="'https://image.tmdb.org/t/p/w500' + movies_api.poster_path"
       class="card-img-top image"
@@ -21,7 +15,7 @@ export default {
     </router-link>
     <div class="card-body body">
       <p class="title">{{ movies_api.title }}</p>
-      <div class="d-flex align-items-center gap-2 info">
+      <div class="d-flex align-items-center; gap-2 info">
         <p class="rate">
           <i class="fa-solid fa-star"></i>
           {{ movies_api.vote_average }}
@@ -43,10 +37,9 @@ export default {
   border: none;
   border-radius: 10px;
   overflow: hidden;
-  background-color: var(--primary-color);
-  box-shadow: 10px 10px 20px rgb(24, 24, 26);
+  background-color: rgb(39, 37, 37);
+  box-shadow: 10px 15px 30px rgba(0, 0, 0, 0.5);
   transition: 0.4s ease;
-  position: relative; 
 }
 
 .movie-card:hover {
@@ -58,6 +51,7 @@ export default {
   aspect-ratio: 2 / 3;
   object-fit: contain;
   display: block;
+  background-color: #151515;
   transition: 0.9s ease;
 }
 
@@ -71,7 +65,7 @@ export default {
 }
 
 .title {
-  color: var(--white);
+  color: #f5f5f5;
   font-size: 14px;
   font-weight: 600;
   margin: 0 0 8px;
@@ -89,7 +83,7 @@ export default {
 }
 
 .info .rate {
-  color: var(--rating-color);
+  color: rgb(241, 207, 57);
   font-weight: 600;
 }
 
@@ -106,8 +100,8 @@ export default {
   width: 90%;
   padding: 5px 0;
 
-  background-color: var(--secondary-color);
-  color: var(--white);
+  background-color: #e63956;
+  color: white;
   border: none;
   border-radius: 50px;
 
