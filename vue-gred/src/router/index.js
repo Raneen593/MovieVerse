@@ -11,10 +11,17 @@ const routes = [
     name: "Movies",
     component: () => import("../views/MoviesPage.vue"),
   },
+
   {
     path: "/movie/:id",
     name: "MovieDetails",
     component: () => import("../views/MovieDetailsPage.vue"),
+  },
+
+  {
+    path: "/profile",
+    name: "Profile",
+    component: () => import("../views/ProfilePage.vue"),
   },
 ];
 
