@@ -21,7 +21,7 @@
         <span class="stat-label">Movies Watched</span>
       </div>
       <div class="stat-card">
-        <span class="stat-number">{{ stats.avgRating }}</span>
+        <span class="stat-number rating">{{ stats.avgRating }}</span>
         <span class="stat-label">Average Rating</span>
       </div>
     </div>
@@ -84,8 +84,8 @@ export default {
 .profile-page {
   min-height: 100vh;
   padding: 80px 20px;
-  background: #10141f;
-  color: #ffffff;
+  background: var(--background-color);
+  color: var(--white);
   font-family: inherit;
 }
 
@@ -100,7 +100,7 @@ export default {
   padding: 25px 30px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.09);
-  background: #171e2b;
+  background: var(--primary-color);
 }
 
 .header-left {
@@ -118,8 +118,8 @@ export default {
   justify-content: center;
   font-size: 24px;
   font-weight: bold;
-  color: white;
-  background: #e50914;
+  color: var(--white);
+  background: var(--secondary-color);
 }
 
 .user-info {
@@ -140,16 +140,16 @@ export default {
   padding: 11px 22px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
-  background: rgba(16, 20, 31, 0.75);
-  color: #ffffff;
+  background: rgba(8, 13, 20, 0.75);
+  color: var(--white);
   cursor: pointer;
   font-size: 15px;
   transition: 0.2s ease;
 }
 
 .edit-btn:hover {
-  background: #ffffff;
-  color: #10141f;
+  background: var(--white);
+  color: var(--background-color);
 }
 
 .stats-section {
@@ -167,7 +167,7 @@ export default {
   padding: 22px 20px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 10px;
-  background: #171e2b;
+  background: var(--primary-color);
   text-align: center;
 }
 
@@ -175,7 +175,11 @@ export default {
   display: block;
   font-size: 28px;
   font-weight: bold;
-  color: #e50914;
+  color: var(--secondary-color);
+}
+
+.stat-number.rating {
+  color: var(--rating-color);
 }
 
 .stat-label {
@@ -199,7 +203,7 @@ export default {
   padding: 40px 20px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 10px;
-  background: #171e2b;
+  background: var(--primary-color);
   text-align: center;
 }
 
@@ -219,8 +223,8 @@ export default {
   display: inline-block;
   padding: 13px 23px;
   border-radius: 9px;
-  background: #e50914;
-  color: white;
+  background: var(--secondary-color);
+  color: var(--white);
   text-decoration: none;
   font-size: 15px;
   font-weight: 700;
@@ -228,7 +232,7 @@ export default {
 }
 
 .explore-btn:hover {
-  background: #ff1f2a;
+  opacity: 0.9;
   transform: translateY(-2px);
 }
 
@@ -242,7 +246,7 @@ export default {
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.09);
-  background: #171e2b;
+  background: var(--primary-color);
   transition: transform 0.2s ease;
 }
 
@@ -272,8 +276,8 @@ export default {
   color: #929cad;
 }
 
-.rating {
-  color: #ffd166;
+.movie-meta .rating {
+  color: var(--rating-color);
 }
 
 /* Responsive */
