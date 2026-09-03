@@ -1,21 +1,18 @@
 <script>
-import Navbar from './components/Navbar.vue';
-import Footer from './components/Footer.vue';
+import Navbar from "./components/NavbarSection.vue";
+import Footer from "./components/FooterBar.vue";
 
-export default{
-  components:{
+export default {
+  components: {
     Navbar,
-    Footer
-  }
-}
+    Footer,
+  },
+};
 </script>
 <template>
-<Navbar/>
-<RouterView/>
-<Footer/>
+  <Navbar />
+  <RouterView />
+  <Footer />
 </template>
 
-
-<style>
-
-</style>
+<style></style>

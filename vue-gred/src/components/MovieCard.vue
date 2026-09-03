@@ -1,19 +1,21 @@
 <script>
 export default {
-  props: ['movies_api']
-}
+  props: ["movies_api"],
+};
 </script>
 
 <template>
   <div class="card movie-card">
-    <img :src="'https://image.tmdb.org/t/p/w500' + movies_api.poster_path" class="card-img-top image">
+    <img
+      :src="'https://image.tmdb.org/t/p/w500' + movies_api.poster_path"
+      class="card-img-top image"
+    />
     <router-link :to="'/movie/' + movies_api.id" class="details-btn">
       Details
     </router-link>
     <div class="card-body body">
       <p class="title">{{ movies_api.title }}</p>
       <div class="d-flex align-items-center gap-2 info">
-
         <p class="rate">
           <i class="fa-solid fa-star"></i>
           {{ movies_api.vote_average }}
@@ -24,7 +26,6 @@ export default {
         <p class="date">
           {{ movies_api.release_date.slice(0, 4) }}
         </p>
-
       </div>
     </div>
   </div>
@@ -51,7 +52,6 @@ export default {
   object-fit: contain;
   display: block;
   transition: 0.9s ease;
-
 }
 
 .movie-card:hover .image {
@@ -74,7 +74,6 @@ export default {
   text-overflow: ellipsis;
 }
 
-
 .info p {
   margin: 0;
   font-size: 12px;
@@ -91,8 +90,6 @@ export default {
   margin-right: 4px;
   font-size: 11px;
 }
-
-
 
 .details-btn {
   position: absolute;

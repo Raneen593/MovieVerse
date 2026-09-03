@@ -18,8 +18,6 @@
       </div>
 
       <main class="details-container">
-        <button class="back-button" @click="goBack">← Back to Movies</button>
-
         <section class="movie-hero">
           <div class="poster-container">
             <img
@@ -367,10 +365,6 @@ export default {
     closeTrailer() {
       this.showTrailer = false;
     },
-
-    goBack() {
-      this.$router.push("/movies");
-    },
   },
 };
 </script>
@@ -379,7 +373,7 @@ export default {
 .movie-details-page {
   position: relative;
   min-height: 100vh;
-  background-color: #10141f;
+  background-color: var(--background-color);
   color: #ffffff;
 }
 
@@ -486,7 +480,7 @@ export default {
 }
 
 .rating {
-  color: #ffd166;
+  color: var(--rating-color);
   font-weight: 700;
 }
 
@@ -525,7 +519,7 @@ export default {
   padding: 13px 23px;
   border: 0;
   border-radius: 9px;
-  background: #e50914;
+  background: var(--secondary-color);
   color: #ffffff;
   font-size: 16px;
   font-weight: 700;
@@ -560,7 +554,7 @@ export default {
   padding: 15px 17px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 10px;
-  background: #171e2b;
+  background: var(--primary-color);
   display: flex;
   flex-direction: column;
   gap: 6px;
