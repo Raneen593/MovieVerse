@@ -45,13 +45,8 @@
         </ul>
 
         <div class="d-flex flex-column flex-lg-row gap-2">
-          <a
-            class="nav-link d-flex align-items-center justify-content-center icons"
-          >
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </a>
           <router-link
-            to="/favorite"
+            to="/favorites"
             class="nav-link d-flex align-items-center justify-content-center icons"
           >
             <i class="fa-solid fa-heart"></i>
