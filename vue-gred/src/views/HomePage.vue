@@ -38,16 +38,14 @@ export default {
     },
 
     handleFavorite(movie) {
-      // 1. جيبي المفضلة القديمة من localStorage
       let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-      // 2. تأكدي إن الفيلم مش مكرر
       const exists = favorites.some((item) => item.id === movie.id);
 
       if (!exists) {
         favorites.push(movie);
         localStorage.setItem("favorites", JSON.stringify(favorites));
-        alert("✅ Added to favorites!");
+        alert("Added to favorites!");
       } else {
         alert("⚠️ Already in favorites!");
       }
