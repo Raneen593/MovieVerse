@@ -35,7 +35,13 @@
             <router-link to="/movies" class="nav-link">Movies </router-link>
           </li>
           <li class="nav-item">
+<<<<<<< HEAD
             <router-link to="/favorites" class="nav-link">Favorites</router-link>
+=======
+            <router-link to="/favorites" class="nav-link"
+              >Favorites</router-link
+            >
+>>>>>>> 13e23897897571db1ec4b06729615691fb91cbb0
           </li>
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">Profile</router-link>
@@ -43,11 +49,6 @@
         </ul>
 
         <div class="d-flex flex-column flex-lg-row gap-2">
-          <a
-            class="nav-link d-flex align-items-center justify-content-center icons"
-          >
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </a>
           <router-link
             to="/favorites"
             class="nav-link d-flex align-items-center justify-content-center icons"
