@@ -35,14 +35,10 @@
             <router-link to="/movies" class="nav-link">Movies </router-link>
           </li>
           <li class="nav-item">
-<<<<<<< HEAD
+
             <router-link to="/favorites" class="nav-link">Favorites</router-link>
-=======
-            <router-link to="/favorites" class="nav-link"
-              >Favorites</router-link
-            >
->>>>>>> 13e23897897571db1ec4b06729615691fb91cbb0
-          </li>
+
+           </li>
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">Profile</router-link>
           </li>
