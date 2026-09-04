@@ -9,7 +9,7 @@
       <h2>Something went wrong</h2>
       <p>{{ error }}</p>
 
-      <button class="back-button" @click="goBack">Back to Movies</button>
+      
     </div>
 
     <div v-else-if="movie" class="movie-content">
@@ -407,21 +407,6 @@ export default {
   padding: 40px 0 70px;
 }
 
-.back-button {
-  padding: 11px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 8px;
-  background: rgba(16, 20, 31, 0.75);
-  color: #ffffff;
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.back-button:hover {
-  background: #ffffff;
-  color: #10141f;
-}
 
 .movie-hero {
   display: grid;
