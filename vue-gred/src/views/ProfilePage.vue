@@ -32,7 +32,9 @@
       <div v-if="recentMovies.length === 0" class="empty-state">
         <span class="empty-icon">🎞️</span>
         <p>Your watchlist is feeling a little empty.</p>
-        <router-link to="/movies" class="explore-btn">Explore Movies</router-link>
+        <router-link to="/movies" class="explore-btn"
+          >Explore Movies</router-link
+        >
       </div>
 
       <div v-else class="movies-grid">
@@ -58,14 +60,14 @@ export default {
     return {
       user: {
         name: "User Name",
-        email: "user@example.com"
+        email: "user@example.com",
       },
       stats: {
         favorites: 0,
         watched: 0,
-        avgRating: "0.0"
+        avgRating: "0.0",
       },
-      recentMovies: []
+      recentMovies: [],
     };
   },
   computed: {
@@ -75,8 +77,8 @@ export default {
         .map((word) => word[0])
         .join("")
         .toUpperCase();
-    }
-  }
+    },
+  },
 };
 </script>
 

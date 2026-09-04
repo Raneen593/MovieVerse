@@ -1,27 +1,25 @@
 <script>
- import FavoriteHeart from './FavoriteHeart.vue';
+import FavoriteHeart from './FavoriteHeart.vue';
 export default {
-  props: ["movies_api"],
-    
-   components: {
+  props: ['movies_api'],
+    components: {
     FavoriteHeart,
   },
-};
+}
 </script>
+
 
 <template>
   <div class="card movie-card">
-     <FavoriteHeart :movie="movies_api" /> 
-    <img
-      :src="'https://image.tmdb.org/t/p/w500' + movies_api.poster_path"
-      class="card-img-top image"
-    />
+    <FavoriteHeart :movie="movies_api" />
+    <img :src="'https://image.tmdb.org/t/p/w500' + movies_api.poster_path" class="card-img-top image">
     <router-link :to="'/movie/' + movies_api.id" class="details-btn">
       Details
     </router-link>
     <div class="card-body body">
       <p class="title">{{ movies_api.title }}</p>
       <div class="d-flex align-items-center gap-2 info">
+
         <p class="rate">
           <i class="fa-solid fa-star"></i>
           {{ movies_api.vote_average }}
@@ -32,6 +30,7 @@ export default {
         <p class="date">
           {{ movies_api.release_date.slice(0, 4) }}
         </p>
+
       </div>
     </div>
   </div>
@@ -46,7 +45,7 @@ export default {
   background-color: var(--primary-color);
   box-shadow: 10px 10px 20px rgb(24, 24, 26);
   transition: 0.4s ease;
-  position: relative; 
+  position: relative;
 }
 
 .movie-card:hover {
@@ -59,6 +58,7 @@ export default {
   object-fit: contain;
   display: block;
   transition: 0.9s ease;
+
 }
 
 .movie-card:hover .image {
@@ -81,6 +81,7 @@ export default {
   text-overflow: ellipsis;
 }
 
+
 .info p {
   margin: 0;
   font-size: 12px;
@@ -97,6 +98,8 @@ export default {
   margin-right: 4px;
   font-size: 11px;
 }
+
+
 
 .details-btn {
   position: absolute;
