@@ -32,7 +32,9 @@
       <div v-if="!hasFavorites" class="empty-state">
         <span class="empty-icon">🎞️</span>
         <p>Your watchlist is feeling a little empty.</p>
-        <router-link to="/movies" class="explore-btn">Explore Movies</router-link>
+        <router-link to="/movies" class="explore-btn"
+          >Explore Movies</router-link
+        >
       </div>
 
       <div v-else class="movies-grid">
@@ -66,12 +68,12 @@ export default {
     return {
       user: {
         name: "User Name",
-        email: "user@example.com"
+        email: "user@example.com",
       },
       stats: {
         watched: 0,
-        avgRating: "0.0"
-      }
+        avgRating: "0.0",
+      },
     };
   },
   computed: {
@@ -97,7 +99,7 @@ export default {
         .map((word) => word[0])
         .join("")
         .toUpperCase();
-    }
+    },
   },
   methods: {
     ...mapActions("favorites", ["loadFavorites"]),
@@ -112,11 +114,11 @@ export default {
 
     getYear(date) {
       return date ? date.slice(0, 4) : "";
-    }
+    },
   },
   mounted() {
     this.loadFavorites();
-  }
+  },
 };
 </script>
 

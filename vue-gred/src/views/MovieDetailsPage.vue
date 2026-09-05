@@ -9,7 +9,7 @@
       <h2>Something went wrong</h2>
       <p>{{ error }}</p>
 
-      <button class="back-button" @click="goBack">Back to Movies</button>
+      
     </div>
 
     <div v-else-if="movie" class="movie-content">
@@ -18,7 +18,6 @@
       </div>
 
       <main class="details-container">
-
         <section class="movie-hero">
           <div class="poster-container">
             <img
@@ -366,8 +365,6 @@ export default {
     closeTrailer() {
       this.showTrailer = false;
     },
-
-    
   },
 };
 </script>
@@ -376,7 +373,8 @@ export default {
 .movie-details-page {
   position: relative;
   min-height: 100vh;
-background-color: var(--background-color);  color: #ffffff;
+  background-color: var(--background-color);
+  color: #ffffff;
 }
 
 .backdrop {
@@ -409,21 +407,6 @@ background-color: var(--background-color);  color: #ffffff;
   padding: 40px 0 70px;
 }
 
-.back-button {
-  padding: 11px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 8px;
-  background: rgba(16, 20, 31, 0.75);
-  color: #ffffff;
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.back-button:hover {
-  background: #ffffff;
-  color: #10141f;
-}
 
 .movie-hero {
   display: grid;
@@ -521,7 +504,7 @@ background-color: var(--background-color);  color: #ffffff;
   padding: 13px 23px;
   border: 0;
   border-radius: 9px;
-background: var(--secondary-color);
+  background: var(--secondary-color);
   color: #ffffff;
   font-size: 16px;
   font-weight: 700;
@@ -556,7 +539,8 @@ background: var(--secondary-color);
   padding: 15px 17px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 10px;
-background: var(--primary-color);  display: flex;
+  background: var(--primary-color);
+  display: flex;
   flex-direction: column;
   gap: 6px;
 }

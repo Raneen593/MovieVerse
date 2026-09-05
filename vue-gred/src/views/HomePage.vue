@@ -2,11 +2,16 @@
 import Herosection from "../components/HeroSection.vue";
 import Moviesection from "../components/MovieSection.vue";
 import movieapi from "../services/movieApi";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   components: {
     Herosection,
     Moviesection,
+  },
+
+    computed: {
+    ...mapGetters("favorites", ["getFavorites"]),
   },
 
   data() {
@@ -33,20 +38,20 @@ export default {
     }
   },
   methods: {
+    ...mapActions("favorites", ["toggleFavorite", "loadFavorites"]),
     handleTrailer(movie) {
       this.$router.push(`/movie/${movie.id}`);
     },
-    handleFavorite(movie) {
-      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-      const exists = favorites.some((item) => item.id === movie.id);
-      if (!exists) {
-        favorites.push(movie);
-        localStorage.setItem("favorites", JSON.stringify(favorites));
-        alert("Added to favorites!");
-      } else {
-        alert("⚠️ Already in favorites!");
-      }
-    },
+
+   handleFavorite(movie) {
+  this.toggleFavorite(movie);
+
+  const isFavorite = this.$store.getters["favorites/isFavorite"](movie.id);
+
+  if (isFavorite) {
+    alert(`✅ "${movie.title}" added to favorites!`);
+  }
+},
   },
 };
 </script>
@@ -102,7 +107,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 .loading {
   color: #aaa;
   font-size: 20px;
@@ -112,17 +116,14 @@ export default {
   font-size: 18px;
   color: #ff6b6b;
 }
-
 .no-results {
   flex-direction: column;
   color: #888;
 }
-
 .no-results h2 {
   font-size: 28px;
   margin-bottom: 12px;
 }
-
 .no-results p {
   font-size: 16px;
 }
