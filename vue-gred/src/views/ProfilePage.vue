@@ -13,14 +13,14 @@
 
     <div class="stats-section">
       <div class="stat-card">
-        <span class="stat-number">{{ stats.favorites }}</span>
+        <span class="stat-number">{{ favoritesCount }}</span>
         <span class="stat-label">Favorite Movies</span>
       </div>
       <div class="stat-card">
         <span class="stat-number">{{ stats.watched }}</span>
         <span class="stat-label">Movies Watched</span>
       </div>
-      <div class="stat-card">
+      <div class="stat-card rating">
         <span class="stat-number rating">{{ stats.avgRating }}</span>
         <span class="stat-label">Average Rating</span>
       </div>
@@ -29,20 +29,26 @@
     <div class="recent-section">
       <h3>Recently Saved</h3>
 
-      <div v-if="recentMovies.length === 0" class="empty-state">
+      <div v-if="!hasFavorites" class="empty-state">
         <span class="empty-icon">🎞️</span>
         <p>Your watchlist is feeling a little empty.</p>
         <router-link to="/movies" class="explore-btn">Explore Movies</router-link>
       </div>
 
       <div v-else class="movies-grid">
-        <div v-for="movie in recentMovies" :key="movie.id" class="movie-card">
-          <img :src="movie.poster" :alt="movie.title" class="movie-poster" />
+        <div v-for="movie in recentFavorites" :key="movie.id" class="movie-card">
+          <img
+            v-if="movie.poster_path"
+            :src="getPosterUrl(movie.poster_path)"
+            :alt="movie.title"
+            class="movie-poster"
+          />
+          <div v-else class="poster-placeholder">No image</div>
           <div class="movie-info">
             <h4>{{ movie.title }}</h4>
             <p class="movie-meta">
-              <span class="rating">★ {{ movie.rating }}</span>
-              • {{ movie.year }} • {{ movie.genre }}
+              <span class="rating">★ {{ formatRating(movie.vote_average) }}</span>
+              • {{ getYear(movie.release_date) }}
             </p>
           </div>
         </div>
@@ -52,6 +58,8 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from "vuex";
+
 export default {
   name: "ProfilePage",
   data() {
@@ -61,14 +69,28 @@ export default {
         email: "user@example.com"
       },
       stats: {
-        favorites: 0,
         watched: 0,
         avgRating: "0.0"
-      },
-      recentMovies: []
+      }
     };
   },
   computed: {
+    ...mapState("favorites", ["favorites"]),
+    ...mapGetters("favorites", ["getFavoritesCount"]),
+
+    favoritesCount() {
+      return this.getFavoritesCount;
+    },
+
+    hasFavorites() {
+      return this.favoritesCount > 0;
+    },
+
+    recentFavorites() {
+      // بناخد آخر 5 أفلام بس من قائمة الـ Favorites
+      return this.favorites.slice(0, 5);
+    },
+
     initials() {
       return this.user.name
         .split(" ")
@@ -76,6 +98,24 @@ export default {
         .join("")
         .toUpperCase();
     }
+  },
+  methods: {
+    ...mapActions("favorites", ["loadFavorites"]),
+
+    getPosterUrl(path) {
+      return `https://image.tmdb.org/t/p/w300${path}`;
+    },
+
+    formatRating(rating) {
+      return rating ? rating.toFixed(1) : "N/A";
+    },
+
+    getYear(date) {
+      return date ? date.slice(0, 4) : "";
+    }
+  },
+  mounted() {
+    this.loadFavorites();
   }
 };
 </script>
@@ -84,8 +124,8 @@ export default {
 .profile-page {
   min-height: 100vh;
   padding: 80px 20px;
-  background: var(--background-color);
-  color: var(--white);
+  background: var(--background-color, #10141f);
+  color: var(--white, #ffffff);
   font-family: inherit;
 }
 
@@ -100,7 +140,7 @@ export default {
   padding: 25px 30px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.09);
-  background: var(--primary-color);
+  background: var(--primary-color, #171e2b);
 }
 
 .header-left {
@@ -118,8 +158,8 @@ export default {
   justify-content: center;
   font-size: 24px;
   font-weight: bold;
-  color: var(--white);
-  background: var(--secondary-color);
+  color: var(--white, #ffffff);
+  background: var(--secondary-color, #e63956);
 }
 
 .user-info {
@@ -141,15 +181,15 @@ export default {
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   background: rgba(8, 13, 20, 0.75);
-  color: var(--white);
+  color: var(--white, #ffffff);
   cursor: pointer;
   font-size: 15px;
   transition: 0.2s ease;
 }
 
 .edit-btn:hover {
-  background: var(--white);
-  color: var(--background-color);
+  background: var(--white, #ffffff);
+  color: var(--background-color, #10141f);
 }
 
 .stats-section {
@@ -167,7 +207,7 @@ export default {
   padding: 22px 20px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 10px;
-  background: var(--primary-color);
+  background: var(--primary-color, #171e2b);
   text-align: center;
 }
 
@@ -175,11 +215,11 @@ export default {
   display: block;
   font-size: 28px;
   font-weight: bold;
-  color: var(--secondary-color);
+  color: var(--secondary-color, #e63956);
 }
 
 .stat-number.rating {
-  color: var(--rating-color);
+  color: var(--rating-color, #f1cf39);
 }
 
 .stat-label {
@@ -203,7 +243,7 @@ export default {
   padding: 40px 20px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 10px;
-  background: var(--primary-color);
+  background: var(--primary-color, #171e2b);
   text-align: center;
 }
 
@@ -223,8 +263,8 @@ export default {
   display: inline-block;
   padding: 13px 23px;
   border-radius: 9px;
-  background: var(--secondary-color);
-  color: var(--white);
+  background: var(--secondary-color, #e63956);
+  color: var(--white, #ffffff);
   text-decoration: none;
   font-size: 15px;
   font-weight: 700;
@@ -246,7 +286,7 @@ export default {
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.09);
-  background: var(--primary-color);
+  background: var(--primary-color, #171e2b);
   transition: transform 0.2s ease;
 }
 
@@ -259,6 +299,17 @@ export default {
   height: 220px;
   object-fit: cover;
   display: block;
+}
+
+.poster-placeholder {
+  width: 100%;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #929cad;
+  font-size: 12px;
+  background: #202938;
 }
 
 .movie-info {
@@ -277,10 +328,9 @@ export default {
 }
 
 .movie-meta .rating {
-  color: var(--rating-color);
+  color: var(--rating-color, #f1cf39);
 }
 
-/* Responsive */
 @media (max-width: 650px) {
   .profile-page {
     padding: 50px 15px;
